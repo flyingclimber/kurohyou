@@ -1,17 +1,17 @@
-var maxNumberOfLines = 3
-var maxStringLength = 80
+var maxNumberOfLines = 3;
+var maxStringLength = 80;
 
-var sheetName = 'global_24'
-var sheetRange = 'D1:D508'
+var sheetName = 'global_24';
+var sheetRange = 'D1:D508';
 
-var spreadsheet = SpreadsheetApp.getActive()
-var sheet = spreadsheet.getSheetByName(sheetName)
-var range = sheet.getRange(sheetRange)
+var spreadsheet = SpreadsheetApp.getActive();
+var sheet = spreadsheet.getSheetByName(sheetName);
+var range = sheet.getRange(sheetRange);
 
 function onOpen() {
   var menuItems = [
     {name: 'Check Strings', functionName: 'checkStrings'},
-    {name: 'Clear Notes', functionName: 'clearNotes'},
+    {name: 'Clear Notes', functionName: 'clearNotes'}
   ];
   spreadsheet.addMenu('Translations', menuItems);
 }
@@ -20,33 +20,33 @@ function onOpen() {
 function checkStrings() {
 
   var data = range.getValues();
-  var message
+  var message;
 
-  range.clearNote()
+  range.clearNote();
 
   for (var i = 0; i < data.length; i++) {
-    cellLoc = i + 1
-    message = ''
+    var cellLoc = i + 1;
+    message = '';
 
     if (typeof data[i][0] == 'number') {
       continue;
     }
 
-    tooManyLines = checkManyLines(data[i][0])
+    var tooManyLines = checkManyLines(data[i][0]);
   
     if (tooManyLines) {
-      message += 'Lines Expected: ' + maxNumberOfLines + ' Got: ' + tooManyLines + '\n'
+      message += 'Lines Expected: ' + maxNumberOfLines + ' Got: ' + tooManyLines + '\n';
     }
 
-    isLineTooLong = checkLineTooLong(data[i][0])
+    var isLineTooLong = checkLineTooLong(data[i][0]);
 
     if (isLineTooLong) {
-      message += 'Length Expected: ' + maxStringLength + ' Got: ' + isLineTooLong
+      message += 'Length Expected: ' + maxStringLength + ' Got: ' + isLineTooLong + '\n';
     }
 
     if (message) {
-      var cell = sheet.getRange('D' + cellLoc)
-      cell.setNote(message)
+      var cell = sheet.getRange('D' + cellLoc);
+      cell.setNote(message);
      }
   }
 }
@@ -55,15 +55,16 @@ function checkStrings() {
 function checkManyLines(string) {
   var lines = string.split(/\n/).length;
 
-  result = (lines > maxNumberOfLines) ? lines : false;
+  var result = (lines > maxNumberOfLines) ? lines : false;
 
-  return result
+  return result;
 }
 
 /* Given a string check to see if any of its lines are longer than maxStringLength */
 function checkLineTooLong(string) {
   var tooLong = false;
   var strings = string.split(/\n/);
+  var result;
 
   for(var i = 0; i < strings.length; i++) {
     if (strings[i].length > maxStringLength) {
