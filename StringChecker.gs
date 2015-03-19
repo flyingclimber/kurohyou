@@ -35,14 +35,13 @@ function checkStrings() {
     tooManyLines = checkManyLines(data[i][0])
   
     if (tooManyLines) {
-      message = 'Lines Expected: ' + maxNumberOfLines + ' Got: ' + tooManyLines + '\n'
+      message += 'Lines Expected: ' + maxNumberOfLines + ' Got: ' + tooManyLines + '\n'
     }
 
     isLineTooLong = checkLineTooLong(data[i][0])
 
     if (isLineTooLong) {
-      isLineTooLongText = 'Length Expected: ' + maxStringLength + ' Got: ' + isLineTooLong
-      message = message + isLineTooLongText
+      message += 'Length Expected: ' + maxStringLength + ' Got: ' + isLineTooLong
     }
 
     if (message) {
