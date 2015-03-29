@@ -2,12 +2,12 @@ var maxNumberOfLines = 3;
 var maxStringLength = 80;
 
 var sheetName = 'global_24';
-var sheetRange = 'D1:D508';
+var sheetRange = 'D1:D5423';
 
 var spreadsheet = SpreadsheetApp.getActive();
 var sheet = spreadsheet.getSheetByName(sheetName);
 var range = sheet.getRange(sheetRange);
-
+  
 function onOpen() {
   var menuItems = [
     {name: 'Check Strings', functionName: 'checkStrings'},
@@ -65,7 +65,7 @@ function checkLineTooLong(string) {
   var tooLong = false;
   var strings = string.split(/\n/);
   var result;
-
+  
   for(var i = 0; i < strings.length; i++) {
     if (strings[i].length > maxStringLength) {
       result = strings[i].length;
@@ -79,4 +79,16 @@ function checkLineTooLong(string) {
 /* Clear all notes in a preset range*/
 function clearNotes() {
   range.clearNote();
+}
+
+/* Log all current notes*/
+function getNotes() {
+  results = range.getNotes();
+  for (var i in results) {
+   for (var j in results[i]) {
+     if (results[i][j]) {
+       Logger.log("Row: " + i + " " + results[i][j]);
+     }
+   }
+ }
 }
