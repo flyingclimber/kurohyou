@@ -1,4 +1,3 @@
-var maxNumberOfLines = 3;
 var maxStringLength = 80;
 
 var sheetName = 'global_24';
@@ -32,10 +31,10 @@ function checkStrings() {
       continue;
     }
 
-    var tooManyLines = checkManyLines(data[i][0]);
-  
+    var tooManyLines = checkManyLines(cellLoc)
+
     if (tooManyLines) {
-      message += 'Lines Expected: ' + maxNumberOfLines + ' Got: ' + tooManyLines + '\n';
+      message += 'Lines Expected: ' + tooManyLines[0] + ' Got: ' + tooManyLines[1] + '\n';
     }
 
     var isLineTooLong = checkLineTooLong(data[i][0]);
@@ -51,13 +50,17 @@ function checkStrings() {
   }
 }
 
-/* Given a string check to see if its more than maxNumberOfLines */
-function checkManyLines(string) {
-  var lines = string.split(/\n/).length;
+/* Given a string check to see if more lines than its ja text */
+function checkManyLines(cellLoc) {
+    var string_en = sheet.getRange('D' + cellLoc).getValues()[0][0]
+    var lines_en = string_en.split(/\n/).length;
 
-  var result = (lines > maxNumberOfLines) ? lines : false;
+    var string_ja = sheet.getRange('C' + cellLoc).getValues()[0][0]
+    var lines_ja = string_ja.split(/\n/).length;
 
-  return result;
+    result = (lines_en > lines_ja) ? [lines_ja, lines_en] : false
+
+    return result;
 }
 
 /* Given a string check to see if any of its lines are longer than maxStringLength */
@@ -79,4 +82,16 @@ function checkLineTooLong(string) {
 /* Clear all notes in a preset range*/
 function clearNotes() {
   range.clearNote();
+}
+
+/* Log all current notes to the console*/
+function getNotes() {
+  results = range.getNotes();
+  for (var i in results) {
+   for (var j in results[i]) {
+     if (results[i][j]) {
+       Logger.log("Row: " + i + " " + results[i][j]);
+     }
+   }
+ }
 }
