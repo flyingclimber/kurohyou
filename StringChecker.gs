@@ -1,24 +1,19 @@
 var maxStringLength = 80;
-
-var sheetName = 'global_24';
-var sheetRange = 'D1:D5423';
-
 var spreadsheet = SpreadsheetApp.getActive();
-var sheet = spreadsheet.getSheetByName(sheetName);
-var range = sheet.getRange(sheetRange);
-  
+
 function onOpen() {
   var menuItems = [
-    {name: 'Check Strings', functionName: 'checkStrings'},
-    {name: 'Clear Notes', functionName: 'clearNotes'}
+    {name: 'Check global_24', functionName: 'checkGlobal24'},
+    {name: 'Check Done Files', functionName: 'checkDoneFiles'}
   ];
   spreadsheet.addMenu('Translations', menuItems);
 }
 
-/* Given a preset cell range find long and multi line strings */
-function checkStrings() {
+/* Given a cell range find long and multi line strings */
+function checkStrings(cellRange, enColumn, jaColumn) {
+  if (typeof cellRange === 'undefined') { cellRange = range ; }
 
-  var data = range.getValues();
+  var data = cellRange.getValues();
   var message;
 
   range.clearNote();
@@ -31,7 +26,7 @@ function checkStrings() {
       continue;
     }
 
-    var tooManyLines = checkManyLines(cellLoc)
+    var tooManyLines = checkManyLines(cellLoc, enColumn, jaColumn)
 
     if (tooManyLines) {
       message += 'Lines Expected: ' + tooManyLines[0] + ' Got: ' + tooManyLines[1] + '\n';
@@ -44,18 +39,19 @@ function checkStrings() {
     }
 
     if (message) {
-      var cell = sheet.getRange('D' + cellLoc);
+      Logger.log(cellRange.getSheet().getName() + ": " + message)
+      var cell = sheet.getRange(enColumn + cellLoc);
       cell.setNote(message);
      }
   }
 }
 
 /* Given a string check to see if more lines than its ja text */
-function checkManyLines(cellLoc) {
-    var string_en = sheet.getRange('D' + cellLoc).getValues()[0][0]
+function checkManyLines(cellLoc, enColumn, jaColumn) {
+    var string_en = sheet.getRange(enColumn + cellLoc).getValues()[0][0]
     var lines_en = string_en.split(/\n/).length;
 
-    var string_ja = sheet.getRange('C' + cellLoc).getValues()[0][0]
+    var string_ja = sheet.getRange(jaColumn + cellLoc).getValues()[0][0]
     var lines_ja = string_ja.split(/\n/).length;
 
     result = (lines_en > lines_ja) ? [lines_ja, lines_en] : false
@@ -79,9 +75,33 @@ function checkLineTooLong(string) {
   return result;
 }
 
-/* Clear all notes in a preset range*/
-function clearNotes() {
-  range.clearNote();
+/* Validate global_24 sheet */
+function checkGlobal24() {
+  var sheetName = 'global_24';
+  var sheetRange = 'D1:D';
+
+  spreadsheet = SpreadsheetApp.getActive();
+  sheet = spreadsheet.getSheetByName(sheetName);
+  range = sheet.getRange(sheetRange);
+
+  checkStrings(range, 'D', 'C');
+}
+
+/* Validate all files in the 'Done' folder */
+function checkDoneFiles() {
+  var folders = DriveApp.getFoldersByName('Done');
+
+  while (folders.hasNext()) {
+    var files = folders.next().getFiles();
+
+    while (files.hasNext()) {
+       sheet = SpreadsheetApp.open(files.next()).getSheets()[0];
+       sheetRange = 'E1:E';
+       range = sheet.getRange(sheetRange);
+
+       checkStrings(range, 'E', 'C');
+    }
+ }
 }
 
 /* Log all current notes to the console*/
