@@ -3,8 +3,8 @@ var spreadsheet = SpreadsheetApp.getActive();
 
 function onOpen() {
   var menuItems = [
-    {name: 'Check Curent Sheet', functionName: 'checkCurrentSheet'}
-    {name: 'Check Done Files', functionName: 'checkDoneFiles'},
+    {name: 'Check Curent Sheet', functionName: 'checkCurrentSheet'},
+    {name: 'Check Done Files', functionName: 'checkDoneFiles'}
   ];
   spreadsheet.addMenu('Translations', menuItems);
 }
