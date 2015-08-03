@@ -3,8 +3,8 @@ var spreadsheet = SpreadsheetApp.getActive();
 
 function onOpen() {
   var menuItems = [
-    {name: 'Check global_24', functionName: 'checkGlobal24'},
-    {name: 'Check Done Files', functionName: 'checkDoneFiles'}
+    {name: 'Check Curent Sheet', functionName: 'checkCurrentSheet'}
+    {name: 'Check Done Files', functionName: 'checkDoneFiles'},
   ];
   spreadsheet.addMenu('Translations', menuItems);
 }
@@ -75,16 +75,13 @@ function checkLineTooLong(string) {
   return result;
 }
 
-/* Validate global_24 sheet */
-function checkGlobal24() {
-  var sheetName = 'global_24';
-  var sheetRange = 'D1:D';
+function checkCurrentSheet() {
+    var sheetRange = "D1:D";
 
-  spreadsheet = SpreadsheetApp.getActive();
-  sheet = spreadsheet.getSheetByName(sheetName);
-  range = sheet.getRange(sheetRange);
+    sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    range = sheet.getRange(sheetRange);
 
-  checkStrings(range, 'D', 'C');
+    checkStrings(range, 'D', 'C');
 }
 
 /* Validate all files in the 'Done' folder */
